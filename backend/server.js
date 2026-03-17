@@ -1,5 +1,4 @@
 const { spawn } = require("child_process");
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -10,16 +9,15 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Middleware for static files
 app.use(express.static(path.join(__dirname, "..")));
 app.use("/models", express.static(path.join(__dirname, "../models")));
-app.use(express.static(path.join(__dirname, "public"))); // optional for face-api.min.js
-
+app.use(express.static(path.join(__dirname, "public"))); 
 
 // Auto start Python chatbot backend
-const pythonPath = "python"; // or "python3" if needed
-
+const pythonPath = "python3"; // Render uses python3 by default
 const chatbotPath = path.join(__dirname, "..", "chatbot", "backend", "main.py");
-
 
 const chatbotProcess = spawn(pythonPath, [chatbotPath]);
 
@@ -31,7 +29,7 @@ chatbotProcess.stderr.on("data", (data) => {
   console.error(`Chatbot Error: ${data}`);
 });
 
-console.log("✅ Python Chatbot started automatically");
+console.log("✅ Python Chatbot process initiated");
 
 // ✅ IMPORT ROUTES
 const faceMatchRoutes = require("./routes/faceMatchRoutes");
@@ -43,14 +41,14 @@ app.use("/api/face", faceMatchRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/albums", albumRoutes);
 
-// DB
+// ✅ DATABASE CONNECTION
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.error(err));
+  .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-//const PORT = 5000;
+// ✅ PORT BINDING FOR RENDER
 const PORT = process.env.PORT || 10000;
-//app.listen(PORT, () =>
+
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-);
+  console.log(`🚀 Server running on port ${PORT}`);
+});
