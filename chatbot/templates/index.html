@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌟 AI Generator</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+    /* ===== HEADER WITH LOGO ===== */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    animation: slideDown 1s ease;
+}
+.header img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+.header h2 {
+    margin: 0;
+    font-family: 'Pacifico', cursive;
+    font-size: 36px;
+    color: #4a4a4a;
+}
+    /* ===== BODY & BACKGROUND ===== */
+    body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+        animation: fadeIn 1.5s ease-in;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+        font-family: 'Pacifico', cursive;
+        font-size: 36px;
+        color: #4a4a4a;
+        text-align: center;
+        margin-bottom: 25px;
+        animation: slideDown 1s ease;
+    }
+    @keyframes slideDown {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    /* ===== SELECT & INPUTS ===== */
+    select, input[type="text"], textarea {
+        width: 100%;
+        max-width: 400px;
+        padding: 12px 15px;
+        margin: 8px 0;
+        border-radius: 12px;
+        border: 1px solid #ccc;
+        transition: all 0.3s ease;
+        font-size: 16px;
+    }
+    select:hover, input:hover, textarea:hover {
+        border-color: #6c63ff;
+        box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+    }
+    select:focus, input:focus, textarea:focus {
+        outline: none;
+        border-color: #6c63ff;
+        box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
+    }
+    /* ===== BUTTON ===== */
+    button {
+        background: linear-gradient(90deg, #6c63ff, #ff6584);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        margin-top: 10px;
+        font-size: 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+    }
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 18px rgba(108, 99, 255, 0.4);
+    }
+    /* ===== BOXES ===== */
+    #normalBox, #reportBox {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 500px;
+        transition: all 0.5s ease;
+    }
+    /* ===== RESULT ===== */
+    #result {
+        background: rgba(255,255,255,0.95);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        max-width: 900px;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 16px;
+        line-height: 1.7;
+        animation: fadeIn 1s ease;
+    }
+    /* ===== EVENT PHOTOS GRID ===== */
+    #result img {
+        border-radius: 10px;
+        object-fit: cover;
+        margin: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    #result img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    }
+    /* ===== HEADERS INSIDE RESULT ===== */
+    #result h3 {
+        text-align: center;
+        color: #6c63ff;
+        margin-top: 20px;
+        font-family: 'Pacifico', cursive;
+    }
+</style>
+</head>
+<body>
+<div class="header">
+    <img src="/static/logo.png" alt="Logo">
+    <h2>🌟 AI Generator</h2>
+</div>
+<select id="mode" onchange="toggleReport()">
+    <option value="music">🎵 Music</option>
+    <option value="caption">✍️ Caption</option>
+    <option value="report">📄 Report</option>
+</select>
+<div id="normalBox">
+    <input id="msg" type="text" placeholder="Type your message here..." style="margin-top:20px;">
+</div>
+<div id="reportBox" style="display:none">
+    <label>🏫 College Logo (optional):</label>
+    <input type="file" id="logo"><br>
+    <label>📝 Brief about event:</label>
+    <textarea id="brief" rows="4" cols="40"></textarea><br>
+    <label>📸 Event Photos (optional):</label>
+    <input type="file" id="photos" multiple><br>
+</div>
+<button onclick="send()">✨ Generate</button>
+<div id="result"></div>
+<script>
+function toggleReport(){
+    let mode = document.getElementById("mode").value;
+    document.getElementById("normalBox").style.display = (mode === "report") ? "none" : "block";
+    document.getElementById("reportBox").style.display = (mode === "report") ? "block" : "none";
+}
+async function send(){
+    let mode = document.getElementById("mode").value;
+    let formData = new FormData();
+    formData.append("mode", mode);
+    if(mode === "report"){
+        formData.append("brief", document.getElementById("brief").value);
+        if(document.getElementById("logo").files[0])
+            formData.append("logo", document.getElementById("logo").files[0]);
+        let photos = document.getElementById("photos").files;
+        for(let i=0;i<photos.length;i++){
+            formData.append("photos", photos[i]);
+        }
+    } else {
+        formData.append("message", document.getElementById("msg").value);
+    }
+    let res = await fetch("/chat", { method:"POST", body:formData });
+    let data = await res.text();
+    document.getElementById("result").innerHTML = data;
+}
+</script>
+</body>
+</html>
