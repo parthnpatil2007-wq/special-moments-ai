@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Event Album</title>
+
+<style>
+body{
+  font-family: sans-serif;
+  background: linear-gradient(135deg, #f2a7aa, #f5d5cc, #c0acf0, #f2c8e6);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  padding: 20px;
+  min-height: 100vh;
+  margin: 0;
+}
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+h2{
+  margin-bottom:20px;
+  text-align:center;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:15px;
+}
+.card{
+  background:#fff;
+  padding:10px;
+  border-radius:15px;
+}
+.card img{
+  width:100%;
+  border-radius:10px;
+  cursor:pointer;
+}
+.actions{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+}
+button{
+  background:none;
+  border:none;
+  color:#0d6efd;
+  cursor:pointer;
+  font-size:14px;
+}
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.modal img{
+  max-width:90%;
+  max-height:85%;
+  border-radius:12px;
+}
+.close{
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:35px;
+  color:#fff;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h2 id="title"></h2>
+<div class="grid" id="photos"></div>
+
+<!-- IMAGE PREVIEW MODAL -->
+<div class="modal" id="modal">
+  <span class="close" onclick="closeModal()">×</span>
+  <img id="modalImg">
+</div>
+
+<script>
+const eventId = localStorage.getItem("eventId");
+
+if (!eventId) {
+  location.href = "guest-dashboard.html";
+}
+
+// ✅ LOAD ALBUM CORRECTLY
+async function loadAlbum() {
+  try {
+    const res = await fetch(`/api/albums/event/${eventId}`);
+
+    if (!res.ok) {
+      alert("Invalid Event ID");
+      location.href = "guest-dashboard.html";
+      return;
+    }
+
+    const album = await res.json();
+
+    document.getElementById("title").innerText =
+      `${album.albumName} (${album.eventId})`;
+
+    const container = document.getElementById("photos");
+    container.innerHTML = "";
+
+    if (!album.photos || album.photos.length === 0) {
+      container.innerHTML = "<p>No photos in this album</p>";
+      return;
+    }
+
+    album.photos.forEach((url, index) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <img src="${url}" onclick="openModal('${url}')">
+        <div class="actions">
+          <button onclick="downloadImage('${url}', ${index})">⬇ Download</button>
+          <button onclick="shareImage('${url}')">🔗 Share</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load album. Try again later.");
+  }
+}
+
+loadAlbum();
+
+// MODAL
+function openModal(url) {
+  document.getElementById("modalImg").src = url;
+  document.getElementById("modal").style.display = "flex";
+}
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+// DOWNLOAD
+async function downloadImage(url, index) {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `photo_${index + 1}.jpg`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// SHARE
+function shareImage(url) {
+  if (navigator.share) {
+    navigator.share({ url });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert("Image link copied!");
+  }
+}
+
+// Close modal on background click
+document.getElementById("modal").addEventListener("click", e => {
+  if (e.target.id === "modal") closeModal();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Find My Photos | Special Moment with AI</title>
+
+<script src="/face-api.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#f2a7aa,#f5d5cc,#c0acf0,#f2c8e6);
+  background-size:400% 400%;
+  animation:gradientBG 15s ease infinite;
+  min-height:100vh;
+  margin:0;
+  padding:40px 20px;
+  display:flex;
+  justify-content:center;
+}
+
+@keyframes gradientBG{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+.container{
+width:100%;
+max-width:900px;
+background:rgba(255,255,255,0.95);
+border-radius:20px;
+padding:35px;
+box-shadow:0 20px 50px rgba(0,0,0,0.15);
+animation:fadeUp 0.8s ease;
+}
+
+.header{
+display:flex;
+align-items:center;
+gap:16px;
+margin-bottom:25px;
+}
+
+.header-logo{
+width:150px;
+height:150px;
+object-fit:contain;
+}
+
+.subtitle{color:#666;font-size:15px;margin-bottom:25px;}
+
+.upload-box{
+border:2px dashed #bbb;
+border-radius:15px;
+padding:25px;
+transition:0.3s;
+}
+
+.upload-box:hover{
+border-color:#7b5cff;
+background:#f7f5ff;
+}
+
+button{
+margin-top:20px;
+padding:12px 30px;
+font-size:16px;
+border-radius:30px;
+border:none;
+background:linear-gradient(135deg,#7b5cff,#5a3df0);
+color:#fff;
+cursor:pointer;
+}
+
+#result{margin-top:35px;min-height:120px;}
+
+.card{
+display:inline-block;
+background:#fff;
+border-radius:15px;
+margin:12px;
+padding:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
+
+.card img{
+width:200px;
+border-radius:12px;
+cursor:pointer;
+}
+
+.actions{margin-top:8px;}
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.85);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999;
+}
+
+.modal img{
+max-width:90%;
+max-height:85%;
+border-radius:15px;
+}
+
+.close{
+position:absolute;
+top:25px;
+right:35px;
+font-size:35px;
+color:#fff;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<img src="assets/logo.png" class="header-logo">
+
+<div>
+<h2>Find My Photos</h2>
+<p class="subtitle">Upload your selfie and let AI find your moments ✨</p>
+</div>
+</div>
+
+<div class="upload-box">
+<input type="file" id="photo" accept="image/*"><br>
+<button onclick="findMyPhotos()">🔍 Find My Photos</button>
+</div>
+
+<div id="result"></div>
+</div>
+
+<div class="modal" id="modal">
+<span class="close" onclick="closeModal()">×</span>
+<img id="modalImg">
+</div>
+
+<script>
+
+let modelsLoaded=false;
+
+async function loadModels(){
+if(modelsLoaded) return;
+
+const MODEL_URL="/models";
+
+await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+
+modelsLoaded=true;
+}
+
+async function findMyPhotos(){
+
+const fileInput=document.getElementById("photo");
+const eventId=localStorage.getItem("eventId");
+const result=document.getElementById("result");
+
+result.innerHTML="";
+
+if(!eventId){alert("Event ID missing");return;}
+if(!fileInput.files[0]){alert("Please upload a photo");return;}
+
+result.innerHTML="⏳ Loading AI models...";
+await loadModels();
+
+const guestImg=await faceapi.bufferToImage(fileInput.files[0]);
+
+/* FIX 1: detectAllFaces + withFaceDescriptors */
+const guestDetection=await faceapi
+.detectAllFaces(guestImg, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.4 }))
+.withFaceLandmarks()
+.withFaceDescriptors();
+
+/* FIX 2: array check */
+if(guestDetection.length===0){
+result.innerHTML="❌ No face detected";
+return;
+}
+
+result.innerHTML="🔍 Fetching album photos...";
+const res=await fetch(`/api/albums/event/${eventId}`);
+const album=await res.json();
+
+result.innerHTML="🔎 Matching faces...";
+
+const matched=[];
+
+for(let url of album.photos){
+
+try{
+
+const img = await faceapi.fetchImage(url);
+
+/* resize image for better group detection */
+const resized = faceapi.resizeResults(
+  await faceapi
+  .detectAllFaces(img, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 }))
+  .withFaceLandmarks()
+  .withFaceDescriptors(),
+  { width: img.width, height: img.height }
+);
+
+const detections = resized;
+console.log("Faces detected in photo:", detections.length);
+
+/* FIX 4: correct check */
+if(detections.length===0) continue;
+
+/* group face comparison */
+let foundMatch = false;
+
+for(let guestFace of guestDetection){
+
+  for(let face of detections){
+
+    const distance = faceapi.euclideanDistance(
+      guestFace.descriptor,
+      face.descriptor
+    );
+
+    if(distance < 0.65){
+  matched.push(url);
+  foundMatch = true;
+  break;
+}
+
+  }
+
+  if(foundMatch) break;
+
+}
+
+}catch{}
+
+}
+
+result.innerHTML="";
+
+if(matched.length===0){
+result.innerHTML="<p>❌ No matching photos found</p>";
+return;
+}
+
+matched.forEach((url,i)=>{
+
+const div=document.createElement("div");
+
+div.className="card";
+
+div.innerHTML=`
+<img src="${url}" onclick="openModal('${url}')">
+<div class="actions">
+<button onclick="downloadImage('${url}',${i})">⬇ Download</button>
+<button onclick="shareImage('${url}')">🔗 Share</button>
+</div>
+`;
+
+result.appendChild(div);
+
+});
+
+}
+
+function openModal(url){
+document.getElementById("modalImg").src=url;
+document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+document.getElementById("modal").style.display="none";
+}
+
+async function downloadImage(url,index){
+
+const res=await fetch(url);
+const blob=await res.blob();
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+a.download=`photo_${index+1}.jpg`;
+
+a.click();
+
+}
+
+function shareImage(url){
+
+if(navigator.share){
+navigator.share({url});
+}
+else{
+navigator.clipboard.writeText(url);
+alert("Image link copied!");
+}
+
+}
+
+</script>
+
+</body>
+</html>

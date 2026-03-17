@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Moment with AI - Capture Every Memory</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* =====================
+   VARIABLES
+===================== */
+:root {
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-light: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --shadow-sm: 0 2px 10px rgba(0,0,0,0.1);
+  --shadow-md: 0 10px 40px rgba(0,0,0,0.15);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.25);
+  --shadow-xl: 0 30px 80px rgba(0,0,0,0.3);
+}
+
+/* =====================
+   RESET
+===================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* =====================
+   BODY
+===================== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-attachment: fixed;
+  color: #333;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: all 0.4s ease;
+}
+
+body.dark {
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  color: #f1f1f1;
+}
+
+/* Animated Background Particles */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: float 20s infinite ease-in-out;
+}
+
+.particle:nth-child(1) {
+  width: 80px;
+  height: 80px;
+  top: 10%;
+  left: 10%;
+  animation-duration: 15s;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  width: 60px;
+  height: 60px;
+  top: 60%;
+  left: 80%;
+  animation-duration: 18s;
+  animation-delay: 2s;
+}
+
+.particle:nth-child(3) {
+  width: 100px;
+  height: 100px;
+  top: 80%;
+  left: 20%;
+  animation-duration: 22s;
+  animation-delay: 4s;
+}
+
+.particle:nth-child(4) {
+  width: 50px;
+  height: 50px;
+  top: 30%;
+  left: 60%;
+  animation-duration: 16s;
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translate(50px, -50px) rotate(120deg);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translate(-30px, 30px) rotate(240deg);
+    opacity: 0.4;
+  }
+}
+
+/* =====================
+   HEADER
+===================== */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 90px;                 /* 🔥 fixed height */
+  padding: 0 4rem;              /* ❌ remove vertical padding */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: var(--shadow-md);
+  transition: all 0.4s ease;
+}
+
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+body.dark header {
+  background: rgba(15, 32, 39, 0.95);
+}
+
+header.scrolled {
+  height: 70px;
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 150px;                /* ✅ your required size */
+  width: auto;
+  object-fit: contain;
+  position: absolute;           /* 🔥 key trick */
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+
+
+
+
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: rotate(0deg); }
+  50% { opacity: 0.7; transform: rotate(180deg); }
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+nav a {
+  padding: 0.7rem 1.5rem;
+  border-radius: 25px;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+nav a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: left 0.3s ease;
+  z-index: -1;
+  border-radius: 25px;
+}
+
+nav a:hover::before {
+  left: 0;
+}
+
+nav a:hover {
+  color: white;
+  transform: translateY(-2px);
+}
+
+.toggle {
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle:hover {
+  transform: rotate(180deg) scale(1.1);
+  background: var(--gradient-primary);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+/* =====================
+   HERO SECTION
+===================== */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem 4rem;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.hero-slides {
+  display: flex;
+  width: max-content;
+  animation: heroSlide 25s linear infinite;
+  will-change: transform;
+}
+
+.hero-slide {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+.hero-section {
+  padding-top: 90px;   /* same as header height */
+}
+
+
+@keyframes heroSlide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-400vw); }
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 1200px;
+  color: white;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: fadeInUp 1s ease-out 0.2s backwards;
+}
+
+.hero-content h1 {
+  font-size: 4.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 1s ease-out 0.4s backwards;
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+  opacity: 0.95;
+  font-weight: 400;
+  animation: fadeInUp 1s ease-out 0.6s backwards;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s ease-out 0.8s backwards;
+}
+
+.btn {
+  padding: 1.2rem 3rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: var(--shadow-md);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 400px;
+  height: 400px;
+}
+
+.btn-primary {
+  background: white;
+  color: var(--primary);
+}
+
+.btn-primary:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn span {
+  position: relative;
+  z-index: 1;
+}
+
+.btn i {
+  position: relative;
+  z-index: 1;
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  animation: bounce 2s infinite;
+}
+
+.scroll-indicator i {
+  font-size: 2rem;
+  color: white;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(15px); }
+}
+
+/* =====================
+   ROLE SELECTION
+===================== */
+.role-section {
+  position: relative;
+  padding: 6rem 2rem;
+  background: white;
+  z-index: 10;
+}
+
+body.dark .role-section {
+  background: #0f2027;
+}
+
+.role-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeInUp 1s ease-out;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.2rem;
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: 50px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.section-header h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-header p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+body.dark .section-header p {
+  color: #bbb;
+}
+
+.role-select {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.role-card {
+  background: white;
+  padding: 3rem 2.5rem;
+  border-radius: 30px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  animation: fadeInUp 1s ease-out backwards;
+}
+
+.role-card:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.role-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.role-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.role-card:hover::before {
+  opacity: 0.05;
+}
+
+body.dark .role-card {
+  background: #1a2a35;
+}
+
+.role-card:hover {
+  transform: translateY(-15px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary);
+}
+
+.role-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+  background: var(--gradient-primary);
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.role-card:hover .role-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--shadow-lg);
+}
+
+.role-icon i {
+  font-size: 3rem;
+  color: white;
+}
+
+.role-card h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+  position: relative;
+  z-index: 1;
+}
+
+body.dark .role-card h3 {
+  color: #f1f1f1;
+}
+
+.role-card p {
+  font-size: 1.05rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+body.dark .role-card p {
+  color: #bbb;
+}
+
+.role-features {
+  text-align: left;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.role-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+body.dark .role-features li {
+  color: #ccc;
+}
+
+.role-features i {
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.btn-small {
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-gradient {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.btn-gradient-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-gradient-outline:hover {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+/* =====================
+   FEATURES
+===================== */
+.features-section {
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+}
+
+body.dark .features-section {
+  background: linear-gradient(135deg, #1a2a35 0%, #203a43 100%);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: translateY(50px);
+  position: relative;
+  overflow: hidden;
+}
+
+body.dark .feature {
+  background: #1a2a35;
+}
+
+.feature::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.feature:hover::before {
+  transform: scaleX(1);
+}
+
+.feature.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-xl);
+}
+
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: var(--gradient-primary);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  transition: all 0.4s ease;
+}
+
+.feature:hover .feature-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.feature-icon i {
+  font-size: 2.5rem;
+  color: white;
+}
+
+.feature h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+body.dark .feature h3 {
+  color: #f1f1f1;
+}
+
+.feature p {
+  color: #666;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+body.dark .feature p {
+  color: #bbb;
+}
+
+/* =====================
+   DEMO VIDEO
+===================== */
+.demo-section {
+  padding: 6rem 2rem;
+  background: white;
+  position: relative;
+}
+
+body.dark .demo-section {
+  background: #0f2027;
+}
+
+.demo-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.demo-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 4rem;
+  border-radius: 30px;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotate 30s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.demo-content video {
+  width: 100%;
+  max-height: 500px;
+  border-radius: 20px;
+  object-fit: cover;
+  object-fit: contain;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 1;
+}
+.demo-content video {
+  background: black;
+}
+
+
+/* =====================
+   TESTIMONIALS
+===================== */
+.testimonials-section {
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+body.dark .testimonials-section {
+  background: linear-gradient(135deg, #1a2a35 0%, #203a43 100%);
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonial {
+  background: white;
+  padding: 3rem 2.5rem;
+  border-radius: 25px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+body.dark .testimonial {
+  background: #1a2a35;
+}
+
+.testimonial::before {
+  content: '"';
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  font-size: 8rem;
+  color: rgba(102, 126, 234, 0.1);
+  font-family: Georgia, serif;
+}
+
+.testimonial:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-xl);
+}
+
+.testimonial-rating {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.testimonial-rating i {
+  color: #ffc107;
+  font-size: 1.2rem;
+}
+
+.testimonial p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+body.dark .testimonial p {
+  color: #ccc;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.testimonial-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.testimonial-info strong {
+  display: block;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+body.dark .testimonial-info strong {
+  color: #f1f1f1;
+}
+
+.testimonial-info span {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+body.dark .testimonial-info span {
+  color: #bbb;
+}
+
+/* =====================
+   CTA SECTION
+===================== */
+.cta-section {
+  padding: 6rem 2rem;
+  background: var(--gradient-primary);
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotate 30s linear infinite;
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-content h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.cta-content p {
+  font-size: 1.3rem;
+  margin-bottom: 3rem;
+  opacity: 0.95;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* =====================
+   FOOTER
+===================== */
+footer {
+  background: #1a1a2e;
+  color: white;
+  padding: 4rem 2rem 2rem;
+  position: relative;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.footer-section ul {
+  list-style: none;
+}
+
+.footer-section li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-section a {
+  color: #bbb;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.footer-section a:hover {
+  color: var(--primary);
+  transform: translateX(5px);
+}
+
+.footer-social {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.footer-social a {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.footer-social a:hover {
+  background: var(--gradient-primary);
+  transform: translateY(-5px);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: #999;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 968px) {
+ header {
+  padding: 0.6rem 2.5rem;
+}
+header {
+  min-height: unset;
+  height: auto;
+}
+
+
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .hero-content p {
+    font-size: 1.2rem;
+  }
+
+  .section-header h2 {
+    font-size: 2.5rem;
+  }
+
+  .role-select {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin: 3rem auto 0;
+  }
+
+  nav {
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .cta-content h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  header {
+    padding: 1rem 1.5rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
+  }
+
+  .cta-content h2 {
+    font-size: 2rem;
+  }
+
+  .cta-content p {
+    font-size: 1.1rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Animated Background Particles -->
+<div class="particles">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+ <div class="logo" onclick="window.scrollTo(0,0)">
+  <img src="assets/logo.png" alt="Special Moment with AI Logo">
+</div>
+  <nav id="mainNav">
+    <a href="#features">Features</a>
+    <a href="#demo">Demo</a>
+    <a href="#testimonials">Reviews</a>
+    <span class="toggle" onclick="toggleDark()" title="Toggle Dark Mode">🌙</span>
+  </nav>
+  <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+    <i class="fas fa-bars"></i>
+  </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="hero-background">
+    <div class="hero-slider">
+      <div class="hero-slides">
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80" alt="Wedding"></div>
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1920&q=80" alt="Birthday"></div>
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1920&q=80" alt="Event"></div>
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&q=80" alt="Party"></div>
+        <!-- Duplicate for seamless loop -->
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80" alt="Wedding"></div>
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1920&q=80" alt="Birthday"></div>
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1920&q=80" alt="Event"></div>
+        <div class="hero-slide"><img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1920&q=80" alt="Party"></div>
+      </div>
+    </div>
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="fas fa-star"></i>
+      <span>AI-Powered Photo Discovery</span>
+    </div>
+    <h1>Special Moment with AI</h1>
+    <p>Capture • Match • Relive Your Precious Memories</p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" onclick="document.getElementById('role-section').scrollIntoView({behavior:'smooth'})">
+        <span>Get Started</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <button class="btn btn-outline" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+        <span>Watch Demo</span>
+        <i class="fas fa-play"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- ROLE SELECTION -->
+<section id="role-section" class="role-section">
+  <div class="role-container">
+    <div class="section-header">
+      <div class="section-badge">
+        <i class="fas fa-users"></i>
+        <span>Choose Your Role</span>
+      </div>
+      <h2>How Would You Like to Continue?</h2>
+      <p>Select the option that best describes you</p>
+    </div>
+
+    <div class="role-select">
+      <div class="role-card">
+        <div class="role-icon">
+          <i class="fas fa-user"></i>
+        </div>
+        <h3>User / Guest</h3>
+        <p>Find your photos instantly using AI face recognition technology</p>
+        <ul class="role-features">
+          <li><i class="fas fa-check-circle"></i> Upload your selfie</li>
+          <li><i class="fas fa-check-circle"></i> AI matches your face</li>
+          <li><i class="fas fa-check-circle"></i> View & download photos</li>
+          <li><i class="fas fa-check-circle"></i> Secure & private</li>
+        </ul>
+        <button class="btn btn-small btn-gradient" onclick="window.location.href='auth.html?role=guest'">
+          <span>Continue as User</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <div class="role-card">
+        <div class="role-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h3>Event Host</h3>
+        <p>Create events and manage photo albums for your guests</p>
+        <ul class="role-features">
+          <li><i class="fas fa-check-circle"></i> Create events</li>
+          <li><i class="fas fa-check-circle"></i> Upload photo albums</li>
+          <li><i class="fas fa-check-circle"></i> Share event codes</li>
+          <li><i class="fas fa-check-circle"></i> Monitor analytics</li>
+        </ul>
+        <button class="btn btn-small btn-gradient-outline" onclick="window.location.href='auth.html?role=host'">
+          <span>Continue as Host</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="section-header">
+    <div class="section-badge">
+      <i class="fas fa-star"></i>
+      <span>Features</span>
+    </div>
+    <h2>Why Choose Us?</h2>
+    <p>Powerful AI technology meets simple user experience</p>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature">
+      <div class="feature-icon">
+        <i class="fas fa-brain"></i>
+      </div>
+      <h3>AI Face Matching</h3>
+      <p>Advanced AI technology instantly identifies and matches your face in event photos with high accuracy.</p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">
+        <i class="fas fa-upload"></i>
+      </div>
+      <h3>Easy Hosting</h3>
+      <p>Create and share albums effortlessly. Upload photos and let guests find theirs automatically.</p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">
+        <i class="fas fa-lock"></i>
+      </div>
+      <h3>Secure & Private</h3>
+      <p>Your photos and data are protected with end-to-end encryption and secure cloud storage.</p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">
+        <i class="fas fa-bolt"></i>
+      </div>
+      <h3>Lightning Fast</h3>
+      <p>Get your photos in seconds. Our AI processes thousands of images in real-time.</p>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">
+        <i class="fas fa-mobile-alt"></i>
+      </div>
+      <h3>Mobile Friendly</h3>
+      <p>Access your memories anywhere, anytime. Fully responsive on all devices.</p>
+    </div>
+
+    <div class="feature">
+  <div class="feature-icon">
+    <i class="fas fa-pen-nib"></i>
+  </div>
+  <h3>Smart Captions</h3>
+  <p>Generate attractive social media captions instantly for events, memories, and special moments.</p>
+</div>
+
+<div class="feature">
+  <div class="feature-icon">
+    <i class="fas fa-music"></i>
+  </div>
+  <h3>Music Suggestions</h3>
+  <p>Get perfect song recommendations based on mood, celebration type, and special occasions.</p>
+</div>
+
+<div class="feature">
+  <div class="feature-icon">
+    <i class="fas fa-file-alt"></i>
+  </div>
+  <h3>AI Event Reports</h3>
+  <p>Create professional college and event reports automatically with photos and formatting.</p>
+</div>
+
+
+    <div class="feature">
+      <div class="feature-icon">
+        <i class="fas fa-download"></i>
+      </div>
+      <h3>Easy Download</h3>
+      <p>Download your matched photos in high quality with a single click. No hassle.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo" class="demo-section">
+  <div class="demo-container">
+    <div class="section-header">
+      <div class="section-badge">
+        <i class="fas fa-play-circle"></i>
+        <span>Demo</span>
+      </div>
+      <h2>See It in Action</h2>
+      <p>Watch how our AI technology works its magic</p>
+    </div>
+
+    <div class="demo-content">
+      <video controls poster="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80">
+        <source src="demo-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testimonials-section">
+  <div class="section-header">
+    <div class="section-badge">
+      <i class="fas fa-quote-left"></i>
+      <span>Testimonials</span>
+    </div>
+    <h2>What Users Say</h2>
+    <p>Hear from our happy customers</p>
+  </div>
+
+  <div class="testimonial-grid">
+    <div class="testimonial">
+      <div class="testimonial-rating">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+      </div>
+      <p>"The AI matching was incredibly accurate and magical! Found all my wedding photos in seconds. Highly recommend!"</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">S</div>
+        <div class="testimonial-info">
+          <strong>Sarah Johnson</strong>
+          <span>Wedding Guest</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <div class="testimonial-rating">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+      </div>
+      <p>"As an event host, this platform made photo sharing so easy. Guests loved finding their own photos instantly!"</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">M</div>
+        <div class="testimonial-info">
+          <strong>Mike Rodriguez</strong>
+          <span>Event Host</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <div class="testimonial-rating">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+      </div>
+      <p>"Simple, fast, and secure. The perfect solution for managing event photos. My guests can't stop talking about it!"</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">E</div>
+        <div class="testimonial-info">
+          <strong>Emily Chen</strong>
+          <span>Birthday Party Host</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Ready to Create Special Moments?</h2>
+    <p>Join thousands of users who are already preserving their memories with AI</p>
+    <div class="cta-buttons">
+      <button class="btn btn-primary" onclick="window.location.href='auth.html?role=guest'">
+        <span>Get Started as User</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <button class="btn btn-outline" onclick="window.location.href='auth.html?role=host'">
+        <span>Get Started as Host</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3><i class="fas fa-sparkles"></i> Special Moment AI</h3>
+      <p style="color:#bbb;line-height:1.6;">AI-powered photo discovery platform for events and memories. Making every moment special.</p>
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#demo">Demo</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="auth.html">Login</a></li>
+      </ul>
+    </div>
+   
+
+<script>
+function openChatbot() {
+  window.open("http://localhost:5001", "_blank");
+}
+</script>
+
+
+    <div class="footer-section">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <ul>
+        <li><i class="fas fa-envelope"></i> specialmoment.ai@gmail.com</li>
+        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+        <li><i class="fas fa-map-marker-alt"></i> Mumbai, India</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 Special Moment with AI • All Rights Reserved • Made with <i class="fas fa-heart" style="color:#e74c3c;"></i> by Parth Patil & Simran Kumavat</p>
+  </div>
+</footer>
+
+<script>
+// ============= ALL YOUR ORIGINAL BACKEND LOGIC (UNCHANGED) =============
+
+// Dark Mode Toggle
+function toggleDark(){
+  document.body.classList.toggle("dark");
+  const toggle = document.querySelector('.toggle');
+  toggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+}
+
+// Header Scroll Effect
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  const currentScroll = window.pageYOffset;
+  
+  if (currentScroll > 100) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+  
+  lastScroll = currentScroll;
+});
+
+// Feature Scroll Animation
+const features = document.querySelectorAll('.feature');
+const observerOptions = {
+  threshold: 0.2,
+  rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('show');
+      }, index * 100);
+    }
+  });
+}, observerOptions);
+
+features.forEach(feature => {
+  observer.observe(feature);
+});
+
+// Mobile Menu Toggle (placeholder for future implementation)
+function toggleMobileMenu() {
+  const nav = document.getElementById('mainNav');
+  nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// Smooth Scroll for all anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+</script>
+<!-- Floating Chatbot Button -->
+<div class="chatbot-float" onclick="openChatbot()">
+  💬
+</div>
+
+<style>
+.chatbot-float {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 65px;
+  height: 65px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  font-size: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+.chatbot-float:hover {
+  transform: scale(1.1) rotate(8deg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+</style>
+
+</body>
+</html>

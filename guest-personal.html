@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find My Photos</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      text-align: center;
+      background: #f7f7f7;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+    }
+    button {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+    }
+    #result img {
+      width: 200px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+<body>
+
+<h2>Upload Your Photo</h2>
+
+<input type="file" id="photo" accept="image/*">
+<br>
+<button onclick="findMyPhotos()">Search</button>
+
+<div id="result"></div>
+
+<script>
+async function findMyPhotos() {
+  const fileInput = document.getElementById("photo");
+  const eventId = localStorage.getItem("eventId");
+  const result = document.getElementById("result");
+
+  // validations
+  if (!eventId) {
+    alert("Event ID missing. Please go back and enter Event ID again.");
+    return;
+  }
+
+  if (!fileInput.files.length) {
+    alert("Please upload a photo");
+    return;
+  }
+
+  // prepare form data
+  const formData = new FormData();
+  formData.append("photo", fileInput.files[0]);
+
+  result.innerHTML = "<p>Matching in progress...</p>";
+
+  try {
+    const res = await fetch(`/api/face/match/${eventId}`, {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+    console.log("Face match response:", data);
+
+    result.innerHTML = "";
+
+    // 🔑 IMPORTANT FIX: backend sends "matchedPhotos"
+    const photos = data.matchedPhotos || [];
+
+    if (photos.length === 0) {
+      result.innerHTML = "<p>No matching photos found</p>";
+      return;
+    }
+
+    photos.forEach(url => {
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "Matched Photo";
+      result.appendChild(img);
+    });
+
+  } catch (err) {
+    console.error("Face match error:", err);
+    alert("Face matching failed");
+  }
+}
+</script>
+
+</body>
+</html>
