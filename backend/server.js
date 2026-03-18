@@ -16,7 +16,7 @@ app.use("/models", express.static(path.join(__dirname, "../models")));
 app.use(express.static(path.join(__dirname, "public"))); 
 
 // Auto start Python chatbot backend
-const pythonPath = "python3"; // Render uses python3 by default
+const pythonPath = "python3";
 const chatbotPath = path.join(__dirname, "..", "chatbot", "backend", "main.py");
 
 const chatbotProcess = spawn(pythonPath, [chatbotPath]);
@@ -28,6 +28,8 @@ chatbotProcess.stdout.on("data", (data) => {
 chatbotProcess.stderr.on("data", (data) => {
   console.error(`Chatbot Error: ${data}`);
 });
+
+console.log("✅ Python Chatbot process initiated");
 
 console.log("✅ Python Chatbot process initiated");
 
