@@ -199,7 +199,7 @@ result.innerHTML = "🔍 Fetching album photos...";
 let album;
 
 try {
-  const res = await fetch(`http://localhost:5000/api/albums/event/${eventId}`);
+  const res = await fetch(`http://special-moments-ai.onrender.com:5000/api/albums/event/${eventId}`);
 
   // Check API response
   if(!res.ok){
