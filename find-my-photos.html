@@ -168,7 +168,8 @@ modelsLoaded=true;
 async function findMyPhotos(){
 
 const fileInput=document.getElementById("photo");
-const eventId=localStorage.getItem("eventId");
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("eventId") || localStorage.getItem("eventId");
 const result=document.getElementById("result");
 
 result.innerHTML="";
