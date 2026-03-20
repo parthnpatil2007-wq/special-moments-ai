@@ -189,24 +189,47 @@ const guestDetection=await faceapi
 .withFaceDescriptors();
 
 /* FIX 2: array check */
-if(guestDetection.length===0){
-result.innerHTML="❌ No face detected";
-return;
+if(guestDetection.length === 0){
+  result.innerHTML = "❌ No face detected";
+  return;
 }
 
-result.innerHTML="🔍 Fetching album photos...";
-const res=await fetch(`/api/albums/event/${eventId}`);
-const album=await res.json();
+result.innerHTML = "🔍 Fetching album photos...";
 
-result.innerHTML="🔎 Matching faces...";
+let album;
 
-const matched=[];
+try {
+  const res = await fetch(`http://localhost:5000/api/albums/event/${eventId}`);
+
+  // Check API response
+  if(!res.ok){
+    result.innerHTML = "❌ Failed to fetch event photos (Invalid Event ID or Server Issue)";
+    return;
+  }
+
+  album = await res.json();
+
+} catch (err) {
+  console.error("Fetch Error:", err);
+  result.innerHTML = "❌ Server connection failed";
+  return;
+}
+
+result.innerHTML = "🔎 Matching faces...";
+
+const matched = [];
+
+/* Safety check */
+if(!album.photos || album.photos.length === 0){
+  result.innerHTML = "❌ No photos found in this event";
+  return;
+}
 
 for(let url of album.photos){
 
-try{
+  try {
 
-const img = await faceapi.fetchImage(url);
+    const img = await faceapi.fetchImage(url);
 
 /* resize image for better group detection */
 const resized = faceapi.resizeResults(
