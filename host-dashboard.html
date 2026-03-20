@@ -1527,7 +1527,7 @@ function logout(){
 /* LOAD ALBUMS - FIXED VERSION */
 async function loadAlbums(){
   try{
-    const res = await fetch(`http://localhost:5000/api/albums/host/${HOST_ID}`);
+    const res = await fetch(`https://special-moments-ai.onrender.com/api/albums/host/${HOST_ID}`)
     const albums = await res.json();
     const list = document.getElementById("albumList");
     const emptyState = document.getElementById("emptyAlbums");
@@ -1602,7 +1602,7 @@ document.getElementById("albumForm").addEventListener("submit", async e=>{
   fd.append("hostId", HOST_ID);
 
   try{
-    const res = await fetch("http://localhost:5000/api/albums/create",{
+    const res = await fetch("https://special-moments-ai.onrender.com/api/albums/create",{
       method:"POST",
       body:fd
     });
@@ -1625,7 +1625,7 @@ async function openAlbum(id){
   showPage("viewAlbum");
 
   try{
-    const res = await fetch(`http://localhost:5000/api/albums/${id}`);
+    const res = await fetch(`https://special-moments-ai.onrender.com/api/albums/${id}`);
     const album = await res.json();
 
     document.getElementById("albumTitle").innerText = album.albumName || 'Untitled Album';
@@ -1667,7 +1667,7 @@ async function deletePhoto(index){
   if(!confirm("Delete this photo?")) return;
   
   try{
-    await fetch(`http://localhost:5000/api/albums/${CURRENT_ALBUM_ID}/photo/${index}`,{
+    await fetch(`https://special-moments-ai.onrender.com/api/albums/${CURRENT_ALBUM_ID}/photo/${index}`,{
       method:"DELETE"
     });
     openAlbum(CURRENT_ALBUM_ID);
@@ -1682,7 +1682,7 @@ async function deleteAlbum(){
   if(!confirm("Delete entire album?")) return;
   
   try{
-    await fetch(`http://localhost:5000/api/albums/${CURRENT_ALBUM_ID}`,{
+    await fetch(`https://special-moments-ai.onrender.com/api/albums/${CURRENT_ALBUM_ID}`,{
       method:"DELETE"
     });
     showPage("albumsOverview");
@@ -1710,7 +1710,7 @@ async function addPhotos(){
 
     try{
 
-      const res = await fetch(`http://localhost:5000/api/albums/${CURRENT_ALBUM_ID}/add-photos`,{
+      const res = await fetch(`https://special-moments-ai.onrender.com/api/albums/${CURRENT_ALBUM_ID}/add-photos`,{
         method:"POST",
         body:formData
       });
